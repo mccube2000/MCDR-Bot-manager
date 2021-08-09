@@ -190,17 +190,16 @@ def on_user_info(server, info):
 				binfo = get_qbot_info(args[1])
 				bot = get_bot(args[1])
 				if bot:
-					reply(server, info, 'bot备注: ' + bot.info.info)
 					if bot.info.pos[1] != -1:
 						reply(server, info, '位于: ' + world_name[0] + 'x' + bot.info.pos[0] + ' y' + bot.info.pos[1] + ' z' + bot.info.pos[2], True)
 					if bot.info.world != -1:
 						reply(server, info, '位于: ' + world_name[bot.info.world] + 'x' + bot.info.pos[0] + ' y' + bot.info.pos[1] + ' z' + bot.info.pos[2], True)
+					reply(server, info, 'bot备注: ' + bot.info.info)
 				else:
 					reply(server, info, 'Bot未在线!')
 					if binfo:
 						reply(server, info, 'Bot位于快捷召唤列表', True)
-						reply(server, info, 'bot备注: ' + binfo.info, True)
-						reply(server, info, '位于: ' + world_name[binfo.world] + 'x' + binfo.pos[0] + ' y' + binfo.pos[1] + ' z' + binfo.pos[2], True)
+						reply(server, info, '位置: ' + world_name[binfo.world] + ' x' + str(binfo.pos[0]) + ' y' + str(binfo.pos[1]) + ' z' + str(binfo.pos[2]), True)
 						reply(server, info, 'bot备注: ' + binfo.info, True)
 			elif args[0] == 'tp' and len(args) == 2 and info.is_player:
 				bot_name = args[2]
