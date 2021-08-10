@@ -38,6 +38,7 @@ HELP_MESSAGE = '''
 
 ConfigFilePath = os.path.join('config', 'MCDR-bot-manager.json')
 world_name = ["overworld", "the_nether", "the_end"]
+GAMEMODE = 'survival'
 bot_list = []
 qbot_info_list = []
 
@@ -210,13 +211,24 @@ def on_user_info(server, info):
 				reply(server, info, '参数格式不正确!')
 
 
+def on_player_joined(server, player, info):
+	if get_bot(player[4:]):
+		server.execute('gamemode {} {}'.format(GAMEMODE, player))
+
+
+def on_player_left(server, message):
+	bot = get_bot(message[4:])
+	if bot:
+		bot_list.remove(bot)
+
+
 def on_load(server, old):
 	if old is not None:
 		global bot_list
 		bot_list = old.bot_list
 	
 	global qbot_info_list
-	with open(ConfigFilePath, 'r') as f:
+	with open(ConfigFilePath, 'r', encoding='utf-8') as f:
 		js = json.load(f)
 		blist = js["qBotInfoList"]
 		for info in blist:
