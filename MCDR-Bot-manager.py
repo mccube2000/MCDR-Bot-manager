@@ -228,14 +228,13 @@ def on_load(server, old):
 		bot_list = old.bot_list
 	
 	global qbot_info_list
-	with open(ConfigFilePath, 'r', encoding='utf-8') as f:
+	with open(ConfigFilePath, 'r') as f:
 		js = json.load(f)
 		blist = js["qBotInfoList"]
 		for info in blist:
 			qbot_info_list.append(Botinfo(info[0],info[1],info[2],info[3],info[4]))
 	
 	server.register_help_message('!!bot', 'Bot相关指令')
-	server.register_help_message('!!b', '快捷Bot操作')
 
 
 def on_server_stop(server, code):
