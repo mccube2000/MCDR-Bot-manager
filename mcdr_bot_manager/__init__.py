@@ -5,6 +5,9 @@ import re
 
 from mcdreforged.api.all import *
 
+from mcdr_bot_manager.bot import *
+from mcdr_bot_manager.text import GAMEMODE, HELP_MESSAGE, WORLD_DICT
+
 
 def on_unload(server: PluginServerInterface):
     server.logger.info('Bye')
@@ -14,74 +17,10 @@ def on_server_startup(server: PluginServerInterface):
     server.logger.info('Server has started')
 
 
-HELP_MESSAGE = '''
------- MCDR Bot Manager ------
-命令列表如下:
-召唤一个bot:
-§7!!bot sp §b<name> [<pos>] [<facing>] [0|1|2]§r
-    [0]主世界,[1]下届,[2]末地.
-    使用逻辑和/player spawn相同
-快捷召唤bot:(可召唤快捷列表中的bot,再次输入清除.也可以召唤普通bot,但不能清除)
-§7!!bot §b<name>§r
-将bot添加到快捷召唤列表中:
-此功能正在制作......
-§7!!bot add §b<name> [<pos>] [<facing>] [0|1|2]§r
-查看快捷召唤列表中:
-此功能正在制作......
-§7!!bot list§r
-查看bot信息:
-§7!!bot info §b<name>§r
-清除一个bot:
-§7!!bot kill §b<name>§r
-传送bot到您的位置:
-§7!!bot tp §b<name>§r
-清除所有bot:
-§7!!bot clean§r
-'''.strip()
-
 ConfigFilePath = os.path.join('config', 'MCDR-bot-manager.json')
-world_name = ["overworld", "the_nether", "the_end"]
-GAMEMODE = 'survival'
+
 bot_list = []
 qbot_info_list = []
-
-
-class Botinfo:
-
-    def __init__(self, name, info="临时加载", pos=[None, -1, None], facing=[-1, None], world=-1):
-        self.name = name
-        self.info = info
-        self.pos = pos
-        self.facing = facing
-        self.world = world
-
-
-class Bot:
-
-    def __init__(self, server, info, Botinfo, qtype=False):
-        self.info = Botinfo
-        self.qtype = qtype
-        #spawm
-        server.execute('execute at {0} run player {1} spawn{2}'.format(
-            info.player, 'bot_' + self.info.name, self.spawn_argument()))
-
-    def kill(self, server):
-        #kill
-        server.execute('player {0} kill'.format('bot_' + self.info.name))
-
-    def spawn_argument(self):
-        temp_command = ""
-        if self.info.pos[1] == -1:
-            return temp_command
-        temp_command += ' at {0} {1} {2}'.format(self.info.pos[0], self.info.pos[1],
-                                                 self.info.pos[2])
-        if self.info.facing[0] == -1:
-            return temp_command
-        temp_command += ' facing {0} {1}'.format(self.info.facing[0], self.info.facing[1])
-        if self.info.world == -1:
-            return temp_command
-        temp_command += ' in {0}'.format(world_name[int(self.info.world)])
-        return temp_command
 
 
 def reply(server, info, msg, q=False):
@@ -196,11 +135,11 @@ def on_user_info(server, info):
                 if bot:
                     if bot.info.pos[1] != -1:
                         reply(
-                            server, info, '位于: ' + world_name[0] + 'x' + bot.info.pos[0] + ' y' +
-                            bot.info.pos[1] + ' z' + bot.info.pos[2], True)
+                            server, info, '位于: ' + WORLD_DICT[WORLD_NAME[0]] + 'x' +
+                            bot.info.pos[0] + ' y' + bot.info.pos[1] + ' z' + bot.info.pos[2], True)
                     if bot.info.world != -1:
                         reply(
-                            server, info, '位于: ' + world_name[bot.info.world] + 'x' +
+                            server, info, '位于: ' + WORLD_DICT[WORLD_NAME[bot.info.world]] + 'x' +
                             bot.info.pos[0] + ' y' + bot.info.pos[1] + ' z' + bot.info.pos[2], True)
                     reply(server, info, 'bot备注: ' + bot.info.info)
                 else:
@@ -208,7 +147,7 @@ def on_user_info(server, info):
                     if binfo:
                         reply(server, info, 'Bot位于快捷召唤列表', True)
                         reply(
-                            server, info, '位置: ' + world_name[binfo.world] + ' x' +
+                            server, info, '位置: ' + WORLD_DICT[WORLD_NAME[binfo.world]] + ' x' +
                             str(binfo.pos[0]) + ' y' + str(binfo.pos[1]) + ' z' + str(binfo.pos[2]),
                             True)
                         reply(server, info, 'bot备注: ' + binfo.info, True)
@@ -246,7 +185,8 @@ def on_load(server, old):
             qbot_info_list.append(Botinfo(info[0], info[1], info[2], info[3], info[4]))
 
     server.register_help_message('!!bot', 'Bot相关指令')
-    register()
+    register(server)
+
 
 def on_server_stop(server, code):
     kill_all()
