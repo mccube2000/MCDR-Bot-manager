@@ -185,15 +185,15 @@ def on_load(server, old):
             qbot_info_list.append(Botinfo(info[0], info[1], info[2], info[3], info[4]))
 
     server.register_help_message('!!bot', 'Bot相关指令')
-    register(server)
+    # register(server)
 
 
 def on_server_stop(server, code):
     kill_all()
 
 
-def register(server: PluginServerInterface):
-    server.register_command(
-        Literal('!!cexample').runs(lambda src: src.reply('Hello world from sample command')))
-    server.register_help_message('!!example', 'Hello world')
-    server.register_help_message('!!cexample', 'Hello world from command')
+# def register(server: PluginServerInterface):
+#     server.register_command(
+#         Literal('!!cexample').runs(lambda src: src.reply('Hello world from sample command')))
+#     server.register_help_message('!!example', 'Hello world')
+#     server.register_help_message('!!cexample', 'Hello world from command')
