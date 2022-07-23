@@ -68,11 +68,17 @@ def on_load(server: PluginServerInterface, old):
         bot_list = old.bot_list
 
     global qbot_info_list
+    global link_call_list
     with open(ConfigFilePath, 'r') as f:
         js = json.load(f)
         blist = js["qBotInfoList"]
         for info in blist:
-            qbot_info_list.append(Botinfo(info[0], info[1], info[2], info[3], info[4]))
+            qbot_info_list.append(Botinfo(info['name'], info['info'], info['pos'], info['facing'], info['world']))
+        
+        clist = js["linkCall"]
+        for link in clist:
+            reply(server, None, str(link))
+            link_call_list.append(link)
 
     server.register_help_message('!!bot', 'Bot相关指令')
     register(server)

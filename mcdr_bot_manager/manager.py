@@ -10,6 +10,7 @@ ConfigFilePath = os.path.join('config', 'MCDR-bot-manager.json')
 
 bot_list: list[Bot] = []
 qbot_info_list: list[Botinfo] = []
+link_call_list = []
 
 
 def reply(server: PluginServerInterface, info: Info, msg, q=False):
