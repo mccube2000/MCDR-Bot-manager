@@ -15,7 +15,7 @@ def on_bot_tp(server: PluginServerInterface, bot_name: str):
 
 
 def on_bot_sp(server: PluginServerInterface, bot_name: str):
-    spawn_bot(server, None, get_qbot_info(bot_name))
+    spawn_bot(server, None, get_qbot_info(bot_name), True)
 
 
 def on_bot_kill(server: PluginServerInterface, bot_name: str):
