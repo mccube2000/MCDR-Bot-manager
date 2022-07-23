@@ -1,20 +1,21 @@
+import time
+
 from mcdreforged.api.all import *
 
 from mcdr_bot_manager.manager import *
 
-server_info: Info = Info.get_server()
 
-
-def on_bot_sleep(server: PluginServerInterface, time: int, next: str):
-    ...
+def on_bot_sleep(server: PluginServerInterface, bot_name: str, t: int, next: str):
+    time.sleep(t)
+    server.dispatch_event(LiteralEvent(next), (bot_name))
 
 
 def on_bot_tp(server: PluginServerInterface, bot_name: str):
-    tp_bot(server, server_info, bot_name)
+    tp_bot(server, None, bot_name)
 
 
-def on_bot_sp(server: PluginServerInterface, int_data: int, str_data: str):
-    ...
+def on_bot_sp(server: PluginServerInterface, bot_name: str):
+    spawn_bot(server, None, get_qbot_info(bot_name))
 
 
 def on_bot_kill(server: PluginServerInterface, bot_name: str):

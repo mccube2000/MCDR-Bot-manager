@@ -13,10 +13,14 @@ qbot_info_list: list[Botinfo] = []
 
 
 def reply(server: PluginServerInterface, info: Info, msg, q=False):
+    m = '[MCDR-bot] '
     if q:
-        server.reply(info, '[MCDR-qbot] ' + msg)
+        m = '[MCDR-qbot] '
+    m += msg
+    if info is not None:
+        server.reply(info, m)
     else:
-        server.reply(info, '[MCDR-bot] ' + msg)
+        server.say(m)
 
 
 def get_bot(bot_name):
@@ -59,13 +63,17 @@ def info_bot(server: PluginServerInterface, info: Info, bot_name: str):
 def tp_bot(server: PluginServerInterface, info: Info, bot_name: str):
     if get_bot(bot_name):
         reply(server, info, '传送中...')
-        if info.player is not None:
+        if info is not None:
             server.execute(f'execute at {info.player} run tp bot_{bot_name} {info.player}')
         else:
-            server.execute(f'execute at {info.player} run tp bot_{bot_name} 0 128 0')
+            server.execute(f'tp bot_{bot_name} 0 128 0')
+
 
 def spawn_bot(server: PluginServerInterface, info: Info, data, q=False):
     global bot_list
+    if data is None:
+        reply(server, info, 'Bot信息为空!', q)
+        return
     #not quickly
     if not q:
         bot_name = 'bot_' + data[0]
