@@ -19,7 +19,7 @@ def on_bot_tp(server: PluginServerInterface, bot_name: str, x: int, y: int, z: i
         server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + next), args)
 
 def on_bot_sp(server: PluginServerInterface, bot_name: str, next: str = None, *args):
-    reply(server, None, f'召唤 bot_{bot_name} ', True)
+    reply(server, None, f'召唤/杀死 bot_{bot_name} ', True)
     spawn_bot(server, None, get_qbot_info(bot_name), True)
     if next is not None:
         server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + next), args)

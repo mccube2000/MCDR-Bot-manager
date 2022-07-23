@@ -46,10 +46,6 @@ def on_user_info(server: PluginServerInterface, info: Info):
             elif args[0] == 'tp' and len(args) == 2 and info.is_player:
                 tp_bot(server, info, args[1])
             elif args[0] == 'call' and len(args) >= 2:
-                reply(server, info, 'call: ' + args[1])
-                # tu = (args[2])
-                # if args[1] == 'sleep':
-                #     tu = (args[2], args[3], args[4])
                 server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + args[1]), args[2:])
             else:
                 reply(server, info, '参数格式不正确!')
