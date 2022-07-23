@@ -1,22 +1,8 @@
 {
 	"qBotInfoList": [
 		{
-			"name": "0",
-			"info": "末地伪和平",
-			"pos": [
-				1036.5,
-				72.00,
-				-327.5
-			],
-			"facing": [
-				0,
-				0
-			],
-			"world": 2
-		},
-		{
 			"name": "1",
-			"info": "临时加载",
+			"info": "跟随玩家召唤",
 			"pos": [
 				0,
 				-1,
@@ -30,38 +16,38 @@
 		},
 		{
 			"name": "2",
-			"info": "临时加载",
+			"info": "地狱加载",
 			"pos": [
 				0,
-				-1,
+				100,
 				0
 			],
 			"facing": [
-				-1,
+				0,
 				0
 			],
-			"world": -1
+			"world": 1
 		},
 		{
 			"name": "3",
-			"info": "临时加载",
+			"info": "末地加载",
 			"pos": [
 				0,
-				-1,
+				100,
 				0
 			],
 			"facing": [
-				-1,
+				0,
 				0
 			],
-			"world": -1
+			"world": 2
 		}
 	],
 	"linkCall": [
 		{
-			"name": "加载器",
+			"name": "开服加载",
 			"type": "load",
-			"value": "sp 1 tp 1 -190 131 -180 1 sleep 15 tp 1 249 134 -171 1 sleep 15 tp 1 -333 134 62 1 sleep 15 tp 1 -414 134 1519 1 sleep 15 sp 1"
+			"value": "sp 1 tp 1 0 128 0 1 sleep 15 sp 1"
 		}
 	]
 }
