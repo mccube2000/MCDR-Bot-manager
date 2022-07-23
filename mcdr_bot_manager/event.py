@@ -12,11 +12,20 @@ def on_bot_sleep(server: PluginServerInterface, t: int, next: str = None, *args)
         server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + next), args)
 
 
-def on_bot_tp(server: PluginServerInterface, bot_name: str, x: int, y: int, z: int, world: int, next: str = None, *args):
-    reply(server, None, f'传送 bot_{bot_name} 到 {WORLD_DICT[WORLD_NAME[int(world)]]} [{x},{y},{z}]', True)
+def on_bot_tp(server: PluginServerInterface,
+              bot_name: str,
+              x: int,
+              y: int,
+              z: int,
+              world: int,
+              next: str = None,
+              *args):
+    reply(server, None, f'传送 bot_{bot_name} 到 {WORLD_DICT[WORLD_NAME[int(world)]]} [{x},{y},{z}]',
+          True)
     tp_bot(server, None, bot_name, (x, y, z), world)
     if next is not None:
         server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + next), args)
+
 
 def on_bot_sp(server: PluginServerInterface, bot_name: str, next: str = None, *args):
     reply(server, None, f'召唤/杀死 bot_{bot_name} ', True)
@@ -24,11 +33,13 @@ def on_bot_sp(server: PluginServerInterface, bot_name: str, next: str = None, *a
     if next is not None:
         server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + next), args)
 
+
 def on_bot_kill(server: PluginServerInterface, bot_name: str, next: str = None, *args):
     reply(server, None, f'杀死 bot_{bot_name} ', True)
     kill_bot(server, bot_name)
     if next is not None:
         server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + next), args)
+
 
 def register(server: PluginServerInterface):
     # server.dispatch_event(LiteralEvent('my_plugin.my_event'), (1, 'a'))
