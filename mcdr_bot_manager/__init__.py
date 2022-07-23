@@ -8,9 +8,6 @@ from mcdr_bot_manager.event import register
 from mcdr_bot_manager.manager import *
 from mcdr_bot_manager.text import GAMEMODE, HELP_MESSAGE
 
-# def on_unload(server: PluginServerInterface):
-#     server.logger.info('Bye')
-
 
 def on_user_info(server: PluginServerInterface, info: Info):
     if info.content.startswith('!!bot'):
@@ -48,11 +45,8 @@ def on_user_info(server: PluginServerInterface, info: Info):
                 for link in link_call_list:
                     if link['name'] == args[1]:
                         args = link['value'].split(' ')
-                        reply(server, None, str('mcdr_bot_manager.bot_' + args[0]))
                         server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + args[0]),
                                               args[1:])
-
-                server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + args[1]), args[2:])
             else:
                 reply(server, info, '参数格式不正确!')
 
@@ -69,7 +63,7 @@ def on_player_left(server: PluginServerInterface, message):
 
 
 def on_load(server: PluginServerInterface, old):
-    server.register_help_message('!!bot', 'Bot相关指令')
+    server.register_help_message('!!bot', 'Bot管理相关指令')
     register(server)
 
     if old is not None:
@@ -92,11 +86,10 @@ def on_load(server: PluginServerInterface, old):
 
 
 def on_server_startup(server: PluginServerInterface):
-    server.logger.info('Server has started')
+    server.logger.info('运行自动bot管理......')
     for link in link_call_list:
         if link['type'] == 'load':
             args = link['value'].split(' ')
-            reply(server, None, str('mcdr_bot_manager.bot_' + args[0]))
             server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + args[0]), args[1:])
 
 
@@ -104,8 +97,5 @@ def on_server_stop(server: PluginServerInterface, code):
     kill_all(server)
 
 
-# def register(server: PluginServerInterface):
-# server.register_command(
-#     Literal('!!cexample').runs(lambda src: src.reply('Hello world from sample command')))
-# server.register_help_message('!!example', 'Hello world')
-# server.register_help_message('!!cexample', 'Hello world from command')
+def on_unload(server: PluginServerInterface):
+    server.logger.info('再见~')
