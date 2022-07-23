@@ -13,7 +13,7 @@ def on_bot_sleep(server: PluginServerInterface, t: int, next: str = None, *args)
 
 
 def on_bot_tp(server: PluginServerInterface, bot_name: str, x: int, y: int, z: int, world: int, next: str = None, *args):
-    reply(server, None, f'传送 bot_{bot_name} 到 {WORLD_DICT[WORLD_NAME[world]]} [{x},{y},{z}]', True)
+    reply(server, None, f'传送 bot_{bot_name} 到 {WORLD_DICT[WORLD_NAME[int(world)]]} [{x},{y},{z}]', True)
     tp_bot(server, None, bot_name, (x, y, z), world)
     if next is not None:
         server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + next), args)
