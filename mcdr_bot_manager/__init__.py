@@ -11,9 +11,6 @@ from mcdr_bot_manager.text import GAMEMODE, HELP_MESSAGE
 # def on_unload(server: PluginServerInterface):
 #     server.logger.info('Bye')
 
-# def on_server_startup(server: PluginServerInterface):
-#     server.logger.info('Server has started')
-
 
 def on_user_info(server: PluginServerInterface, info: Info):
     if info.content.startswith('!!bot'):
@@ -29,7 +26,7 @@ def on_user_info(server: PluginServerInterface, info: Info):
             elif args[0] == 'clean' and len(args) == 1:
                 kill_all(server)
                 reply(server, info, 'bot已清空')
-            elif (args[0] not in ['sp', 'clean', 'kill', 'info', 'tp', 'call']
+            elif (args[0] not in ['sp', 'clean', 'kill', 'info', 'tp', 'call', 'run']
                   and len(args) == 1) or (args[0] == 'sp' and len(args) >= 2):
                 if args[0] == "sp":
                     del (args[0])
@@ -47,6 +44,15 @@ def on_user_info(server: PluginServerInterface, info: Info):
                 tp_bot(server, info, args[1])
             elif args[0] == 'call' and len(args) >= 2:
                 server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + args[1]), args[2:])
+            elif args[0] == 'run' and len(args) == 2:
+                for link in link_call_list:
+                    if link['name'] == args[1]:
+                        args = link['value'].split(' ')
+                        reply(server, None, str('mcdr_bot_manager.bot_' + args[0]))
+                        server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + args[0]),
+                                              args[1:])
+
+                server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + args[1]), args[2:])
             else:
                 reply(server, info, '参数格式不正确!')
 
@@ -63,6 +69,9 @@ def on_player_left(server: PluginServerInterface, message):
 
 
 def on_load(server: PluginServerInterface, old):
+    server.register_help_message('!!bot', 'Bot相关指令')
+    register(server)
+
     if old is not None:
         global bot_list
         bot_list = old.bot_list
@@ -73,19 +82,26 @@ def on_load(server: PluginServerInterface, old):
         js = json.load(f)
         blist = js["qBotInfoList"]
         for info in blist:
-            qbot_info_list.append(Botinfo(info['name'], info['info'], info['pos'], info['facing'], info['world']))
-        
+            qbot_info_list.append(
+                Botinfo(info['name'], info['info'], info['pos'], info['facing'], info['world']))
+
         clist = js["linkCall"]
         for link in clist:
             reply(server, None, str(link))
             link_call_list.append(link)
 
-    server.register_help_message('!!bot', 'Bot相关指令')
-    register(server)
+
+def on_server_startup(server: PluginServerInterface):
+    server.logger.info('Server has started')
+    for link in link_call_list:
+        if link['type'] == 'load':
+            args = link['value'].split(' ')
+            reply(server, None, str('mcdr_bot_manager.bot_' + args[0]))
+            server.dispatch_event(LiteralEvent('mcdr_bot_manager.bot_' + args[0]), args[1:])
 
 
 def on_server_stop(server: PluginServerInterface, code):
-    kill_all()
+    kill_all(server)
 
 
 # def register(server: PluginServerInterface):
