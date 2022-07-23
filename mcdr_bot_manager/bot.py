@@ -24,10 +24,12 @@ class Bot:
         self.info = Botinfo
         self.qtype = qtype
         #spawm
-        # server.execute(
-        #     f'execute at {info.player} run player bot_{self.info.name} spawn{self.spawn_argument()}'
-        # )
-        server.execute(f'player bot_{self.info.name} spawn{self.spawn_argument()}')
+        if info is not None:
+            server.execute(
+                f'execute at {info.player} run player bot_{self.info.name} spawn{self.spawn_argument()}'
+            )
+        else:
+            server.execute(f'player bot_{self.info.name} spawn{self.spawn_argument()}')
 
     def kill(self, server: PluginServerInterface):
         #kill

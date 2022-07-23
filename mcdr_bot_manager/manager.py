@@ -60,13 +60,19 @@ def info_bot(server: PluginServerInterface, info: Info, bot_name: str):
             reply(server, info, 'bot备注: ' + binfo.info, True)
 
 
-def tp_bot(server: PluginServerInterface, info: Info, bot_name: str):
+def tp_bot(server: PluginServerInterface,
+           info: Info,
+           bot_name: str,
+           pos: tuple[int, int, int] = [0, 128, 0],
+           world: int = 0):
     if get_bot(bot_name):
         reply(server, info, '传送中...')
         if info is not None:
             server.execute(f'execute at {info.player} run tp bot_{bot_name} {info.player}')
         else:
-            server.execute(f'tp bot_{bot_name} 0 128 0')
+            server.execute(
+                f'execute in minecraft:{WORLD_NAME[int(world)]} run tp bot_{bot_name} {pos[0]} {pos[1]} {pos[2]}'
+            )
 
 
 def spawn_bot(server: PluginServerInterface, info: Info, data, q=False):
