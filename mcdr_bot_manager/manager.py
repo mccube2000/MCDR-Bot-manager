@@ -116,7 +116,6 @@ def spawn_bot(server: PluginServerInterface, info: Info, data, q=False):
         bot = get_bot(binfo.name)
         if bot:
             kill_bot(server, binfo.name)
-            bot_list.remove(bot)
             return
     bot_list.append(Bot(server, info, binfo))
 
