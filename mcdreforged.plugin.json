@@ -1,11 +1,11 @@
 {
     "id": "mcdr_bot_manager",
-    "version": "0.6.1",
+    "version": "0.7.0",
     "name": "MCDR Bot Manager",
     "description": "MCDR Bot powered by Carpet",
     "author": "MC_cubes",
     "link": "https://github.com/mccube2000/MCDR-Bot-manager",
     "dependencies": {
-        "mcdreforged": ">=2.0.0-alpha.1"
+        "mcdreforged": "^2.6.0"
     }
 }

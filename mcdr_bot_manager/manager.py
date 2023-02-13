@@ -76,7 +76,7 @@ def tp_bot(server: PluginServerInterface,
             )
 
 
-def spawn_bot(server: PluginServerInterface, info: Info, data, q=False):
+def spawn_bot(server: PluginServerInterface, info: Info, data: Botinfo | dict, q: bool = False):
     global bot_list
     if data is None:
         reply(server, info, 'Bot信息为空!', q)
@@ -111,7 +111,7 @@ def spawn_bot(server: PluginServerInterface, info: Info, data, q=False):
                 return
     #quickly
     else:
-        binfo = data
+        binfo: Botinfo = data
         reply(server, info, 'bot备注: ' + binfo.info, q)
         bot = get_bot(binfo.name)
         if bot:
