@@ -4,7 +4,7 @@ from mcdreforged.api.all import *
 
 from mcdr_bot_manager.manager import *
 
-
+@new_thread('bot_sleep')
 def on_bot_sleep(server: PluginServerInterface, t: int, next: str = None, *args):
     reply(server, None, f'暂停 {t}s, 下一步: {next}', True)
     time.sleep(int(t))

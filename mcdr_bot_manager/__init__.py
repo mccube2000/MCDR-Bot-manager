@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import json
 
 from mcdreforged.api.all import *
+from mcdreforged.api.utils.serializer import Serializable
 
 from mcdr_bot_manager.bot import *
 from mcdr_bot_manager.event import register
@@ -72,17 +72,17 @@ def on_load(server: PluginServerInterface, old):
 
     global qbot_info_list
     global link_call_list
-    with open(ConfigFilePath, 'r') as f:
-        js = json.load(f)
-        blist = js["qBotInfoList"]
-        for info in blist:
-            qbot_info_list.append(
-                Botinfo(info['name'], info['info'], info['pos'], info['facing'], info['world']))
 
-        clist = js["linkCall"]
-        for link in clist:
-            reply(server, None, str(link))
-            link_call_list.append(link)
+    config = server.load_config_simple('config.json')
+
+    for info in config["qBotInfoList"]:
+        qbot_info_list.append(
+            Botinfo(info['name'], info['info'], info['pos'], info['facing'], info['world']))
+
+    for link in config["linkCall"]:
+        # reply(server, None, str(link))
+        server.logger.info(str(link))
+        link_call_list.append(link)
 
 
 def on_server_startup(server: PluginServerInterface):
@@ -99,3 +99,18 @@ def on_server_stop(server: PluginServerInterface, code):
 
 def on_unload(server: PluginServerInterface):
     server.logger.info('再见~')
+
+
+class Config(Serializable):
+    qBotInfoList: list[dict[str, int]] = {
+        'name': 1,
+        'info': 1,
+        'pos': 1,
+        'facing': 1,
+        'world': 1,
+    }
+    linkCall: list[dict[str, int]] = {
+        'name': 1,
+        'type': 1,
+        'value': 1,
+    }
