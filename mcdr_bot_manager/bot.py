@@ -15,7 +15,7 @@ class Botinfo:
         self.info = info
         self.pos = pos
         self.facing = facing
-        self.world = world
+        self.world = int(world)
 
 
 class Bot:
@@ -40,7 +40,7 @@ class Bot:
         temp_command += f' at {self.info.pos[0]} {self.info.pos[1]} {self.info.pos[2]}'
         if self.info.facing[0] == -1:
             return temp_command
-        temp_command += ' facing {self.info.facing[0]} {self.info.facing[1]}'
+        temp_command += f' facing {self.info.facing[0]} {self.info.facing[1]}'
         if self.info.world == -1:
             return temp_command
         temp_command += f' in {WORLD_NAME[int(self.info.world)]}'

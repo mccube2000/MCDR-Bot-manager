@@ -1,12 +1,9 @@
-import os
 import re
 
 from mcdreforged.api.all import *
 
-from mcdr_bot_manager.bot import *
-from mcdr_bot_manager.text import WORLD_DICT
-
-ConfigFilePath = os.path.join('config', 'MCDR-bot-manager.json')
+from mcdr_bot_manager.bot import Bot, Botinfo
+from mcdr_bot_manager.text import WORLD_DICT, WORLD_NAME
 
 bot_list: list[Bot] = []
 qbot_info_list: list[Botinfo] = []
@@ -14,14 +11,14 @@ link_call_list = []
 
 
 def reply(server: PluginServerInterface, info: Info, msg, q=False):
-    m = '[MCDR-bot] '
+    prefix = '§6[§cMCDR-bot§6]§r '
     if q:
-        m = '[MCDR-qbot] '
-    m += msg
+        prefix = '§6[§cMCDR-qbot§6]§r '
+    msg = RTextList(prefix, msg)
     if info is not None:
-        server.reply(info, m)
+        server.reply(info, msg)
     else:
-        server.say(m)
+        server.say(msg)
 
 
 def get_bot(bot_name):
@@ -38,27 +35,32 @@ def get_qbot_info(bot_name):
     return None
 
 
+def print_info(server: PluginServerInterface, info: Info, binfo: Botinfo, q: bool = False):
+    world = None
+    if binfo.world != -1:
+        world = ': ' + WORLD_DICT[WORLD_NAME[binfo.world]]
+    elif binfo.pos[1] != -1:
+        world = ': 跟随玩家或世界出生点'
+    else:
+        reply(server, info, '维度与位置: 跟随玩家或世界出生点', q)
+    if world is not None:
+        reply(
+            server, info, '维度' + world + ' 位置 x:' + str(binfo.pos[0]) + ' y:' + str(binfo.pos[1]) +
+            ' z:' + str(binfo.pos[2]), q)
+    reply(server, info, 'bot备注: ' + binfo.info, q)
+
+
 def info_bot(server: PluginServerInterface, info: Info, bot_name: str):
-    binfo = get_qbot_info(bot_name)
     bot = get_bot(bot_name)
     if bot:
-        if bot.info.pos[1] != -1:
-            reply(
-                server, info, '位于: ' + WORLD_DICT[WORLD_NAME[0]] + 'x' + bot.info.pos[0] + ' y' +
-                bot.info.pos[1] + ' z' + bot.info.pos[2], True)
-        if bot.info.world != -1:
-            reply(
-                server, info, '位于: ' + WORLD_DICT[WORLD_NAME[bot.info.world]] + 'x' +
-                bot.info.pos[0] + ' y' + bot.info.pos[1] + ' z' + bot.info.pos[2], True)
-        reply(server, info, 'bot备注: ' + bot.info.info)
+        reply(server, info, 'Bot在线!')
+        print_info(server, info, bot.info)
     else:
         reply(server, info, 'Bot未在线!')
-        if binfo:
-            reply(server, info, 'Bot位于快捷召唤列表', True)
-            reply(
-                server, info, '位置: ' + WORLD_DICT[WORLD_NAME[binfo.world]] + ' x' +
-                str(binfo.pos[0]) + ' y' + str(binfo.pos[1]) + ' z' + str(binfo.pos[2]), True)
-            reply(server, info, 'bot备注: ' + binfo.info, True)
+        binfo = get_qbot_info(bot_name)
+        if binfo is not None:
+            reply(server, info, 'Bot快捷召唤列表信息:', True)
+            print_info(server, info, binfo, True)
 
 
 def tp_bot(server: PluginServerInterface,
@@ -87,8 +89,7 @@ def spawn_bot(server: PluginServerInterface, info: Info, data: Botinfo | dict, q
         if not re.fullmatch(r'\w{1,16}', bot_name):
             reply(server, info, 'Bot名称不正确!', q)
             return
-        elif get_bot(data[0]):
-            reply(server, info, 'Bot已经在线!', q)
+        elif kill_bot(server, data[0]):
             return
         else:
             if len(data) == 1:
@@ -113,9 +114,7 @@ def spawn_bot(server: PluginServerInterface, info: Info, data: Botinfo | dict, q
     else:
         binfo: Botinfo = data
         reply(server, info, 'bot备注: ' + binfo.info, q)
-        bot = get_bot(binfo.name)
-        if bot:
-            kill_bot(server, binfo.name)
+        if kill_bot(server, binfo.name):
             return
     bot_list.append(Bot(server, info, binfo))
 
