@@ -67,7 +67,6 @@ def load(server: PluginServerInterface):
         qbot_info_list.append(
             Botinfo(info['name'], info['info'], info['pos'], info['facing'], info['world']))
     for link in config['linkCall']:
-        server.logger.info(str(link))
         link_call_list.append(link)
 
 
