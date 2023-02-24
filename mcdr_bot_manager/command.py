@@ -117,8 +117,9 @@ def register(server: PluginServerInterface):
     builder = SimpleCommandBuilder()
 
     # root
-    info = NodeNameDict({'root': ['Bot管理相关指令']})
-    server.register_help_message(root, info.root)
+    info = NodeNameDict(
+        {'root': [RText('§lBot管理相关指令§r').h('点击执行命令').c(RAction.run_command, f'{root}')]})
+    server.register_help_message(root, RTextList(*info.root))
     builder.command(f'{root}', __root_command)
 
     # sp
@@ -218,6 +219,15 @@ def register(server: PluginServerInterface):
     # builder.command(f'{root} {ck.diy} {ck.list}', __diy_command)  # *
     builder.command(f'{root} {ck.diy} {ck.reset} <key>', __diy_command)
     builder.command(f'{root} {ck.diy} <key> <new_key>', __diy_command)
+
+    # reload
+    info.reload = [
+        '§6*§l重载插件并重载配置文件:§r\n',
+        RText(f'§7{root} {ck.reload} §c<name>\n').h('点击输入命令').c(RAction.suggest_command,
+                                                                f'{root} {ck.reload}')
+    ]
+    builder.command(f'{root} {ck.reload}',
+                    lambda s: s.get_server().reload_plugin("mcdr_bot_manager"))
 
     # quick
     info.quick = [

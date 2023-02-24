@@ -42,4 +42,5 @@ def on_server_stop(server: PluginServerInterface, code):
 
 
 def on_unload(server: PluginServerInterface):
+    config.save(server)
     server.logger.info('再见~')

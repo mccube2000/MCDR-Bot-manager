@@ -52,6 +52,7 @@ default_keys = {
     'diy': 'diy',
     'list': 'list',
     'reset': 'reset',
+    'reload': 'reload',
 }
 
 
@@ -68,3 +69,8 @@ def load(server: PluginServerInterface):
     for link in config['linkCall']:
         server.logger.info(str(link))
         link_call_list.append(link)
+
+
+def save(server: PluginServerInterface):
+    # server.save_config_simple(config,'config.json')
+    server.save_config_simple(keys.data, 'keys.json')
