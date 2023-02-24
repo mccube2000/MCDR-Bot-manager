@@ -29,6 +29,7 @@ def on_load(server: PluginServerInterface, old):
     command.register(server)
 
 
+@new_thread("auto_bot_manager")
 def on_server_startup(server: PluginServerInterface):
     server.logger.info('运行自动bot管理......')
     for link in link_call_list:
